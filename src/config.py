@@ -12,9 +12,11 @@ gi.require_version("Adw", "1")
 
 from gi.repository import Adw, Gdk, Gio, Gtk
 
+# This whole system will definitely break and crash if it is fed bad files.
+# So for now just don't touch the config files ever. I don't know why you would anyway.
 languages = {"active": "", "registered": []}
 preferences = {"ollama_url": "http://localhost:11434"}
-lang_opts = {"model": "", "sys_prompt": "", "chat_model": ""}
+lang_opts = {"model": "", "sys_prompt": "", "chat_model": "", "resources": {}}
 
 
 def get_languages_json():
@@ -46,6 +48,7 @@ def load_lang_opts():
             "sys_prompt": f"""The following is writing in {lang_name}. \
 Check the writing for mistakes and give advice to the user on how to improve their writing. \
 Write in {lang_name} only. Here is the writing:""",
+            "resources": {},
         }
         if models:
             lang_opts["model"] = (

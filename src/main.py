@@ -6,8 +6,6 @@ from os import path, read
 import gi
 import ollama
 
-from notes_view import NotesView
-
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("WebKit", "6.0")
@@ -18,6 +16,7 @@ import config
 import ollama_thread  # automatically starts a background thread
 from archive_view import ArchiveView
 from languages_view import LanguagesView
+from notes_view import NotesView
 from resources_view import ResourcesView
 from writing_view import WritingView
 
@@ -26,7 +25,6 @@ def list_pages():
     return [
         ResourcesView(),
         NotesView(),
-        # ChatView(),
         WritingView(),
         ArchiveView(),
         LanguagesView(),

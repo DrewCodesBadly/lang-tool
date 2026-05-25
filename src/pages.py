@@ -21,13 +21,3 @@ class LangToolPage(Gtk.ScrolledWindow):
 
     def build(self):
         pass
-
-
-class NotesView(LangToolPage):
-    def __init__(self):
-        super().__init__("Notes", "notepad-symbolic")
-
-
-class ChatView(LangToolPage):
-    def __init__(self):
-        super().__init__("Chat", "chat-symbolic")
