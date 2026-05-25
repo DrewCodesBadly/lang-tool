@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import gi
 
@@ -70,8 +71,19 @@ class LanguagesView(LangToolPage):
 
         boxed_list.append(self.row)
 
-        action_row = Adw.ActionRow(title="Action Row Example", activatable=True)
-        boxed_list.append(action_row)
+        file_open_row = Adw.ActionRow(title="Open Language Folder", activatable=True)
+
+        def open_lang_folder(_widget):
+            folder = config.lang_dir()
+            subprocess.Popen(
+                ["xdg-open", folder],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+        file_open_row.connect("activated", open_lang_folder)
+        file_open_row.set_icon_name("folder-open-symbolic")
+        boxed_list.append(file_open_row)
 
         add_language_group = Adw.ExpanderRow(title="Add Language")
         entry_row = Adw.EntryRow(title="Language Name")

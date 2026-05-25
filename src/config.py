@@ -18,3 +18,24 @@ def save_languages_json(l):
 
 def get_config_dir():
     return path.join(path.expanduser("~"), ".config/LangTool")
+
+
+def lang_dir():
+    global languages
+    if languages["active"]:
+        active = languages["active"]
+        # ignore type error it doesn't get json
+        return path.join(get_config_dir(), active)
+    else:
+        return None
+
+
+def get_active_lang():
+    global languages
+    return languages["active"]
+
+
+def set_active_lang(l):
+    global languages
+    languages["active"] = l
+    save_languages_json(languages)
