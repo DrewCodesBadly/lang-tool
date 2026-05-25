@@ -1,18 +1,36 @@
+import asyncio
 import json
 import os
 from os import path, read
 
 import gi
+import ollama
 
-import config
+from notes_view import NotesView
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
+gi.require_version("WebKit", "6.0")
 
-import ollama
-from gi.repository import Adw, Gdk, Gio, Gtk
+from gi.repository import Adw, Gdk, Gio, Gtk, WebKit
 
-from pages import list_pages
+import config
+import ollama_thread  # automatically starts a background thread
+from archive_view import ArchiveView
+from languages_view import LanguagesView
+from resources_view import ResourcesView
+from writing_view import WritingView
+
+
+def list_pages():
+    return [
+        ResourcesView(),
+        NotesView(),
+        # ChatView(),
+        WritingView(),
+        ArchiveView(),
+        LanguagesView(),
+    ]
 
 
 def build_sidebar(pages, stack, app):
@@ -54,6 +72,8 @@ def build_sidebar(pages, stack, app):
         list_box.append(list_box_row)
 
     def on_list_box_row_activated(box, row):
+        # bad for performance but idc its python
+        pages[row.get_index()].build()  # rebuilds page in case selected lang changed.
         stack.set_visible_child(pages[row.get_index()])
 
     list_box.connect("row-selected", on_list_box_row_activated)
@@ -89,6 +109,10 @@ def on_activate(app):
 
 
 def main():
+    # since markdown css is only dark atm
+    sm = Adw.StyleManager.get_default()
+    sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
+
     # Set up config dir, read necessary info
     languages = config.get_languages_json()
     config_dir = config.get_config_dir()
@@ -103,6 +127,7 @@ def main():
         with open(lang_file, "w") as file:
             json_str = json.dumps(languages, indent=4)
             file.write(json_str)
+    config.load_lang_opts()
 
     theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
     icon_path = path.join(path.dirname(__file__), "icons")
