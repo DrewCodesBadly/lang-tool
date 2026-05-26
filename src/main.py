@@ -134,7 +134,7 @@ def main(_version):
             json_str = json.dumps(languages, indent=4)
             file.write(json_str)
     load_lang_opts()
-    
+
     theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
     theme.add_resource_path("/com/github/DrewCodesBadly/LangTool/icons/")
 
@@ -148,6 +148,8 @@ def main(_version):
 
     app.run(None)
 
+    # Kill background thread when app is done
+
 
 if __name__ == "__main__":
-    main()
+    main(None)

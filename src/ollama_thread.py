@@ -87,6 +87,10 @@ def run_loop():
     threading.Thread(target=loop.run_forever, daemon=True).start()
 
 
+def kill_background_thread():
+    loop.stop()
+
+
 def webview_set_md(md, webview):
     html_response = mistune.html(md)
     html = (
