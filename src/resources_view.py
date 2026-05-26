@@ -37,7 +37,7 @@ class ResourcesView(LangToolPage):
             add_row = Adw.ButtonRow(
                 title="Add Resource", start_icon_name="plus-symbolic"
             )
-            add_row.connect("activated", lambda _: self.on_add_resource(key))
+            add_row.connect("activated", lambda _, k=key: self.on_add_resource(k))
             group.add(add_row)
             self.preferences_page.add(group)
 
