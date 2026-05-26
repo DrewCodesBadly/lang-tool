@@ -5,10 +5,10 @@ import webbrowser
 import gi
 import mistune
 import ollama
-from gi.repository import Adw, Gdk, Gio, Gtk
+from gi.repository import Adw, Gtk
 
-import config
-from pages import LangToolPage
+from .config import get_lang_opts, save_lang_opts
+from .pages import LangToolPage
 
 
 class ResourcesView(LangToolPage):
@@ -20,7 +20,7 @@ class ResourcesView(LangToolPage):
     def build(self):
         self.preferences_page = Adw.PreferencesPage()
         self.set_child(self.preferences_page)
-        resources = config.get_lang_opts()["resources"]
+        resources = get_lang_opts()["resources"]
         for key, value in resources.items():
             group = Adw.PreferencesGroup(title=key)
             for item in value:
@@ -66,9 +66,9 @@ class ResourcesView(LangToolPage):
         group.add(group_name_entry)
 
         def on_activate(_widget):
-            opts = config.get_lang_opts()
+            opts = get_lang_opts()
             opts["resources"][group_name_entry.get_text()] = []
-            config.save_lang_opts(opts)
+            save_lang_opts(opts)
             self.build()  # Rebuild the view to reflect changes
             dialog.close()
 
@@ -86,7 +86,7 @@ class ResourcesView(LangToolPage):
         dialog.add(page)
         group = Adw.PreferencesGroup(title="")
 
-        resources = config.get_lang_opts()["resources"]
+        resources = get_lang_opts()["resources"]
         model = Gtk.StringList()
         for name in resources:
             model.append(name)
@@ -98,13 +98,13 @@ class ResourcesView(LangToolPage):
         group.add(group_name_entry)
 
         def on_activate(_widget):
-            opts = config.get_lang_opts()
+            opts = get_lang_opts()
             to_remove = group_name_entry.get_selected_item().get_string()
             if to_remove not in opts["resources"]:
                 dialog.close()
                 return
             del opts["resources"][to_remove]
-            config.save_lang_opts(opts)
+            save_lang_opts(opts)
             self.build()  # Rebuild the view to reflect changes
             dialog.close()
 
@@ -130,7 +130,7 @@ class ResourcesView(LangToolPage):
         group.add(url_entry)
 
         def on_activate(_widget):
-            opts = config.get_lang_opts()
+            opts = get_lang_opts()
             opts["resources"][group_name].append(
                 {
                     "name": name_entry.get_text(),
@@ -138,7 +138,7 @@ class ResourcesView(LangToolPage):
                     "url": url_entry.get_text(),
                 }
             )
-            config.save_lang_opts(opts)
+            save_lang_opts(opts)
             self.build()  # Rebuild the view to reflect changes
             dialog.close()
 

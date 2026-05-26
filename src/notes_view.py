@@ -1,16 +1,7 @@
-import asyncio
-import os
-import subprocess
-
 import gi
-import mistune
-import ollama
-from gi.repository import Adw, Gdk, Gio, Gtk, WebKit
+from gi.repository import Gtk
 
-import config
-import ollama_thread
-from ollama_thread import build_webview_widget, render_message_response
-from pages import LangToolPage
+from .pages import LangToolPage
 
 
 class NotesView(LangToolPage):

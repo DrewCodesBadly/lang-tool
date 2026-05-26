@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=LangTool
+Exec=langtool
+Icon=com.github.DrewCodesBadly.LangTool
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

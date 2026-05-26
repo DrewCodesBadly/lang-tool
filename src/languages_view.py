@@ -6,8 +6,15 @@ import mistune
 import ollama
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-import config
-from pages import LangToolPage
+from .config import (
+    get_config_dir,
+    get_languages_json,
+    lang_dir,
+    open_file,
+    save_languages_json,
+    set_active_lang,
+)
+from .pages import LangToolPage
 
 
 class LanguagesView(LangToolPage):
@@ -24,7 +31,7 @@ class LanguagesView(LangToolPage):
 
         def on_selection_changed(row, _pspec):
             lang = row.get_selected_item().get_string()
-            config.set_active_lang(lang)
+            set_active_lang(lang)
 
         self.row.connect("notify::selected-item", on_selection_changed)
         boxed_list.append(self.row)
@@ -32,7 +39,7 @@ class LanguagesView(LangToolPage):
         file_open_row = Adw.ActionRow(title="Open Language Folder", activatable=True)
 
         def open_lang_folder(_widget):
-            config.open_file(config.lang_dir())
+            open_file(lang_dir())
 
         file_open_row.connect("activated", open_lang_folder)
         file_open_row.set_icon_name("folder-open-symbolic")
@@ -61,21 +68,21 @@ class LanguagesView(LangToolPage):
         self.build()
 
     def add_lang(self, name):
-        languages = config.get_languages_json()
+        languages = get_languages_json()
         if name in languages["registered"]:
             return
         languages["active"] = name
         languages["registered"].append(name)
-        config.save_languages_json(languages)
+        save_languages_json(languages)
         # make dir
-        config_dir = config.get_config_dir()
+        config_dir = get_config_dir()
         if not os.path.exists(os.path.join(config_dir, name)):
             os.makedirs(os.path.join(config_dir, name))
 
         self.build()
 
     def remove_lang(self, name):
-        languages = config.get_languages_json()
+        languages = get_languages_json()
         if name not in languages["registered"]:
             return
         languages["registered"].remove(name)
@@ -83,9 +90,9 @@ class LanguagesView(LangToolPage):
             languages["active"] = (
                 languages["registered"][0] if languages["registered"] else ""
             )
-        config.save_languages_json(languages)
+        save_languages_json(languages)
         # remove dir
-        config_dir = config.get_config_dir()
+        config_dir = get_config_dir()
         if os.path.exists(os.path.join(config_dir, name)):
             for root, dirs, files in os.walk(
                 os.path.join(config_dir, name), topdown=False
@@ -99,7 +106,7 @@ class LanguagesView(LangToolPage):
         self.build()
 
     def build(self):
-        languages = config.get_languages_json()
+        languages = get_languages_json()
         cur_lang = languages["active"]  # string
         lang_opts = languages["registered"]  # string array
         list_model = Gtk.StringList()

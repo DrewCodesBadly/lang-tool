@@ -7,10 +7,14 @@ import mistune
 import ollama
 from gi.repository import Adw, Gdk, Gio, Gtk, WebKit
 
-import config
-import ollama_thread
-from ollama_thread import build_webview_widget, render_message_response
-from pages import LangToolPage
+from .config import (
+    get_lang_opts,
+    models_gtk_list,
+    save_lang_opts,
+    save_writing_archive,
+)
+from .ollama_thread import build_webview_widget, render_message_response
+from .pages import LangToolPage
 
 
 class WritingView(LangToolPage):
@@ -57,9 +61,9 @@ class WritingView(LangToolPage):
         self.set_child(box)
 
     def build(self):
-        models = config.models_gtk_list()
+        models = models_gtk_list()
         self.model_select_row.set_model(models)
-        cfg = config.get_lang_opts()
+        cfg = get_lang_opts()
         model_index = models.find(cfg["model"])
 
         self.model_select_row.set_selected(model_index)
@@ -67,10 +71,10 @@ class WritingView(LangToolPage):
 
     def submit_writing(self, _):
         selected_model = self.model_select_row.get_selected_item().get_string()
-        opts = config.get_lang_opts()
+        opts = get_lang_opts()
         opts["model"] = selected_model
         opts["sys_prompt"] = self.sys_prompt_row.get_text()
-        config.save_lang_opts(opts)
+        save_lang_opts(opts)
 
         dialog = Adw.Dialog(halign=Gtk.Align.FILL, valign=Gtk.Align.FILL)
         dialog.set_follows_content_size(True)
@@ -126,7 +130,7 @@ class WritingView(LangToolPage):
         dialog.present(self.get_root())
 
     def save_writing(self):
-        config.save_writing_archive(
+        save_writing_archive(
             self.title_row.get_text(),
             self.textview.get_buffer().get_text(
                 self.textview.get_buffer().get_start_iter(),

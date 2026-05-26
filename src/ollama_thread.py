@@ -1,6 +1,5 @@
 import asyncio
 import threading
-from turtle import update
 
 import mistune
 import ollama
@@ -86,9 +85,6 @@ img {
 def run_loop():
     # run asyncio loop and wait forever
     threading.Thread(target=loop.run_forever, daemon=True).start()
-
-
-run_loop()
 
 
 def webview_set_md(md, webview):

@@ -7,9 +7,9 @@ import mistune
 import ollama
 from gi.repository import Adw, Gdk, Gio, Gtk
 
-import config
-from ollama_thread import build_webview_widget, webview_set_md
-from pages import LangToolPage
+from .config import get_archive_folder
+from .ollama_thread import build_webview_widget, webview_set_md
+from .pages import LangToolPage
 
 
 class ArchiveView(LangToolPage):
@@ -44,7 +44,7 @@ class ArchiveView(LangToolPage):
         list_box.set_css_classes(["navigation-sidebar"])
         list_box.set_hexpand(True)
 
-        directory_path = config.get_archive_folder()
+        directory_path = get_archive_folder()
         for filename in os.listdir(directory_path):
             file_extension = os.path.splitext(filename)
             if file_extension[1] == ".json":
@@ -57,7 +57,7 @@ class ArchiveView(LangToolPage):
 
         def on_list_box_row_activated(box, row):
             file_name = row.get_child().get_text().replace(" ", "_") + ".json"
-            dir = config.get_archive_folder()
+            dir = get_archive_folder()
             path = os.path.join(dir, file_name)
             self.content_bin.set_child(self.build_content(path))
 

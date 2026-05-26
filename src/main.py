@@ -4,21 +4,26 @@ import os
 from os import path, read
 
 import gi
-import ollama
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("WebKit", "6.0")
 
+import ollama
 from gi.repository import Adw, Gdk, Gio, Gtk, WebKit
 
-import config
-import ollama_thread  # automatically starts a background thread
-from archive_view import ArchiveView
-from languages_view import LanguagesView
-from notes_view import NotesView
-from resources_view import ResourcesView
-from writing_view import WritingView
+from .archive_view import ArchiveView
+from .config import (
+    get_config_dir,
+    get_languages_json,
+    load_lang_opts,
+    save_languages_json,
+)
+from .languages_view import LanguagesView
+from .notes_view import NotesView
+from .ollama_thread import run_loop
+from .resources_view import ResourcesView
+from .writing_view import WritingView
 
 
 def list_pages():
@@ -106,33 +111,37 @@ def on_activate(app):
     win.present()
 
 
-def main():
+def main(_version):
+    # Start background thread for ollama
+    run_loop()
+
     # since markdown css is only dark atm
     sm = Adw.StyleManager.get_default()
     sm.set_color_scheme(Adw.ColorScheme.PREFER_DARK)
 
     # Set up config dir, read necessary info
-    languages = config.get_languages_json()
-    config_dir = config.get_config_dir()
+    languages = get_languages_json()
+    config_dir = get_config_dir()
     if not path.exists(config_dir):
         os.makedirs(config_dir)
 
     lang_file = path.join(config_dir, "languages.json")
     if path.exists(lang_file):
         with open(lang_file, "r") as file:
-            config.save_languages_json(json.loads(file.read().strip()))
+            save_languages_json(json.loads(file.read().strip()))
     else:
         with open(lang_file, "w") as file:
             json_str = json.dumps(languages, indent=4)
             file.write(json_str)
-    config.load_lang_opts()
-
+    load_lang_opts()
+    
     theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-    icon_path = path.join(path.dirname(__file__), "icons")
-    theme.add_search_path(icon_path)
+    theme.add_resource_path("/com/github/DrewCodesBadly/LangTool/icons/")
 
     app = Adw.Application(
         application_id="com.github.DrewCodesBadly.LangTool",
+        flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
+        resource_base_path="/com/github/DrewCodesBadly/LangTool",
     )
 
     app.connect("activate", on_activate)

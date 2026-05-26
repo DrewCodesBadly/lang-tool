@@ -1,0 +1,14 @@
+{
+    "name": "python3-maturin",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"maturin\" --no-build-isolation"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/9c/1c/612d23d33ec21b9ae7ece7b3f0dd5f9dfd57b4009e9d2938165869ebd6ae/maturin-1.13.3.tar.gz",
+            "sha256": "771e1e9e71a278e56db01552e0d1acfd1464259f9575b6e72842f893cd299079"
+        }
+    ]
+}

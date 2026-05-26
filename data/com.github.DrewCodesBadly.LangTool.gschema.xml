@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="langtool">
+	<schema id="com.github.DrewCodesBadly.LangTool" path="/com/github/DrewCodesBadly/LangTool/">
+	</schema>
+</schemalist>

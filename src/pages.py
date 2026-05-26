@@ -1,12 +1,4 @@
-import os
-import subprocess
-
-import gi
-import mistune
-import ollama
 from gi.repository import Adw, Gdk, Gio, Gtk
-
-import config
 
 
 class LangToolPage(Gtk.ScrolledWindow):
