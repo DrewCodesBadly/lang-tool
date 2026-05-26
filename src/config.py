@@ -74,7 +74,7 @@ def save_lang_opts(l):
 
 
 def get_config_dir():
-    return path.join(path.expanduser("~"), ".config/LangTool")
+    return path.join(path.expanduser("~"), ".var/app/com.github.DrewCodesBadly.LangTool")
 
 
 def lang_dir():
@@ -84,7 +84,8 @@ def lang_dir():
         # ignore type error it doesn't get json
         return path.join(get_config_dir(), active)
     else:
-        return None
+        # just uhh don't worry about it
+        return get_config_dir()
 
 
 def get_active_lang():

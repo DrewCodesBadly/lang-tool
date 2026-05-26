@@ -31,6 +31,8 @@ class LanguagesView(LangToolPage):
 
         def on_selection_changed(row, _pspec):
             lang = row.get_selected_item().get_string()
+            if lang == "None":
+                lang = "" # hack to make it use lang_opts.json at config root
             set_active_lang(lang)
 
         self.row.connect("notify::selected-item", on_selection_changed)
@@ -73,11 +75,11 @@ class LanguagesView(LangToolPage):
             return
         languages["active"] = name
         languages["registered"].append(name)
-        save_languages_json(languages)
         # make dir
         config_dir = get_config_dir()
         if not os.path.exists(os.path.join(config_dir, name)):
             os.makedirs(os.path.join(config_dir, name))
+        save_languages_json(languages)
 
         self.build()
 
