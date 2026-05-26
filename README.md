@@ -1,3 +1,4 @@
 # langtool
 
-A description of this project.
+personal language study tool.
+should build correctly using gnome builder or flatpak-builder with all needed sdks installed.
