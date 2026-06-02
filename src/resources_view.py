@@ -10,7 +10,6 @@ from gi.repository import Adw, Gtk
 from .config import get_lang_opts, save_lang_opts
 from .pages import LangToolPage
 
-
 class ResourcesView(LangToolPage):
     def __init__(self):
         super().__init__("Resources", "symbolic-link-symbolic")
@@ -31,7 +30,7 @@ class ResourcesView(LangToolPage):
                 )
                 row.add_suffix(Gtk.Image(icon_name="symbolic-link-symbolic"))
                 row.set_activatable(True)
-                row.connect("activated", lambda _: self.open_resource(item["url"]))
+                row.connect("activated", lambda _, i=item: self.open_resource(i["url"]))
 
                 group.add(row)
             add_row = Adw.ButtonRow(

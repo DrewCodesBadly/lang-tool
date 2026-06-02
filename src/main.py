@@ -21,7 +21,7 @@ from .config import (
 )
 from .languages_view import LanguagesView
 from .notes_view import NotesView
-from .ollama_thread import run_loop
+from .ollama_thread import run_loop, kill_background_thread
 from .resources_view import ResourcesView
 from .writing_view import WritingView
 
@@ -149,7 +149,7 @@ def main(_version):
     app.run(None)
 
     # Kill background thread when app is done
-
+    kill_background_thread()
 
 if __name__ == "__main__":
     main(None)
